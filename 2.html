@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>荷里悦 - 厦门高端荷花主题度假酒店</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- 配置Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2D5D48', // 深绿色主色调
+            secondary: '#7BA08D', // 中绿色辅助色
+            accent: '#F9F5E9', // 米白色点缀色
+            dark: '#1A3026', // 暗绿色
+            light: '#E6F0E9', // 浅绿色
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['"Noto Serif SC"', 'serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .text-shadow-lg {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      }
+      .transition-transform-opacity {
+        transition-property: transform, opacity;
+      }
+      .bg-blur {
+        backdrop-filter: blur(8px);
+      }
+    }
+  </style>
+  
+  <style>
+    /* 全局样式 */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    /* 荷花动画效果 */
+    .lotus-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    
+    /* 渐变叠加层 */
+    .gradient-overlay {
+      background: linear-gradient(to bottom, rgba(45, 93, 72, 0.1), rgba(45, 93, 72, 0.8));
+    }
+    
+    /* 滚动进度条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E6F0E9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2D5D48;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #1A3026;
+    }
+    
+    /* 加载动画 */
+    .loader {
+      border-top-color: #2D5D48;
+      animation: spinner 0.8s linear infinite;
+    }
+    @keyframes spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 客户评价区域优化 */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      width: 100%;
+    }
+    
+    .review-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+    
+    .quote-icon {
+      font-size: 4rem;
+      color: #2D5D48;
+      opacity: 0.2;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    
+    .stars {
+      color: #f1c40f;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .review-text {
+      color: #5a6c7d;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    
+    .reviewer {
+      display: flex;
+      align-items: center;
+      margin-top: auto;
+    }
+    
+    .reviewer img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+      border: 2px solid #E6F0E9;
+    }
+    
+    .reviewer-info h4 {
+      font-weight: 600;
+      color: #2D5D48;
+      margin-bottom: 0.25rem;
+    }
+    
+    .reviewer-info p {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-light text-dark antialiased">
+  <!-- 页面加载动画 -->
+  <div id="loader" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <div class="loader h-16 w-16 border-4 border-light rounded-full"></div>
+  </div>
+
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full top-0 z-40 transition-all duration-300">
+    <nav class="container mx-auto px-4 py-4 flex items-center justify-between bg-transparent">
+      <a href="#" class="flex items-center space-x-2">
+        <span class="text-primary text-3xl"><img src="./tu1.png" width="30" height="20" /></span>
+        <span class="text-2xl font-serif font-bold text-white text-shadow-lg">荷里悦</span>
+      </a>
+      
+      <!-- 桌面导航 -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#about" class="text-white hover:text-accent transition-colors duration-300 text-shadow">关于我们</a>
+        <a href="#rooms" class="text-white hover:text-accent transition-colors duration-300 text-shadow">客房体验</a>
+        <a href="#dining" class="text-white hover:text-accent transition-colors duration-300 text-shadow">餐饮美食</a>
+        <a href="#amenities" class="text-white hover:text-accent transition-colors duration-300 text-shadow">休闲设施</a>
+        <a href="#contact" class="text-white hover:text-accent transition-colors duration-300 text-shadow">联系我们</a>
+        <a href="#booking" class="bg-primary hover:bg-dark text-white px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">立即预订</a>
+      </div>
+      
+      <!-- 移动端菜单按钮 -->
+      <button id="menuBtn" class="md:hidden text-white text-2xl focus:outline-none">
+        <i class="fa fa-bars"></i>
+      </button>
+    </nav>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden bg-primary/95 bg-blur absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-transform-opacity duration-300 pointer-events-none">
+      <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+        <a href="#about" class="text-white hover:text-accent py-2 border-b border-secondary/30 transition-colors duration-300">关于我们</a>
+        <a href="#rooms" class="text-white hover:text-accent py-2 border-b border-secondary/30 transition-colors duration-300">客房体验</a>
+        <a href="#dining" class="text-white hover:text-accent py-2 border-b border-secondary/30 transition-colors duration-300">餐饮美食</a>
+        <a href="#amenities" class="text-white hover:text-accent py-2 border-b border-secondary/30 transition-colors duration-300">休闲设施</a>
+        <a href="#contact" class="text-white hover:text-accent py-2 border-b border-secondary/30 transition-colors duration-300">联系我们</a>
+        <a href="#booking" class="bg-accent text-primary text-center px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg mt-2">立即预订</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 英雄区 -->
+  <section class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 背景图 -->
+    <div class="absolute inset-0 z-0">
+      <img src="./tu2.png"alt="荷花池背景" class="w-full h-full object-cover">
+      <div class="absolute inset-0 gradient-overlay"></div>
+    </div>
+    
+    <!-- 荷花装饰元素 -->
+    <div class="absolute top-1/4 left-10 hidden lg:block z-10 lotus-animation" style="animation-delay: 0s;">
+          </div>
+    <div class="absolute bottom-1/3 right-10 hidden lg:block z-10 lotus-animation" style="animation-delay: 1.5s;">
+         </div>
+    
+    <!-- 主内容 -->
+    <div class="container mx-auto px-4 z-20 text-center">
+      <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-serif font-bold text-white leading-tight text-shadow-lg mb-6">
+        自然共生 · 悦心体验
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-accent/90 max-w-2xl mx-auto mb-10 text-shadow">
+       以荷为韵，以海为境 在厦门湾，藏着一座"悦享松弛"的度假秘境
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#booking" class="bg-primary hover:bg-dark text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-xl">
+          立即预订
+        </a>
+        <a href="#about" class="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-full text-lg font-medium transition-all duration-300">
+          了解更多
+        </a>
+      </div>
+    </div>
+    
+    <!-- 向下滚动指示 -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+      <a href="#about" class="text-white text-3xl opacity-80 hover:opacity-100 transition-opacity duration-300">
+        <i class="fa fa-angle-down"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 关于我们 -->
+  <section id="about" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">荷里悦 · 酒店简介</h2>
+        <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          荷里悦酒店坐落于厦门集美区与杏林区交接，毗邻大海与湿地，以荷花为设计灵感，打造兼具东方美学与现代奢华的度假空间
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="order-2 lg:order-1">
+          <h3 class="text-2xl font-serif font-bold text-primary mb-4">东方雅韵 · 自然栖居</h3>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            荷里悦酒店占地面积达20000平方米，其中40%为园林景观，精心培育的荷花池贯穿整个酒店区域，四季皆有不同景致。我们将厦门的海洋文化与荷花的高洁雅致融为一体，为每位宾客提供远离尘嚣的静谧体验。
+          </p>
+          <p class="text-gray-600 mb-8 leading-relaxed">
+            酒店拥有120间豪华客房及套房，部分房型可直接欣赏到荷花池或海景。我们坚持"自然、舒适、奢华"的服务理念，让您在享受高端设施的同时，感受与自然亲密接触的惬意。
+          </p>
+          
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8">
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary mb-2">120+</div>
+              <p class="text-gray-600">豪华客房</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary mb-2">5</div>
+              <p class="text-gray-600">特色餐厅</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary mb-2">10+</div>
+              <p class="text-gray-600">休闲设施</p>
+            </div>
+          </div>
+          
+          <a href="#contact" class="inline-flex items-center text-primary hover:text-dark font-medium transition-colors duration-300">
+            了解更多酒店故事 <i class="fa fa-long-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <div class="order-1 lg:order-2 grid grid-cols-2 gap-4">
+          <div class="space-y-4">
+          <img src="./tu3.png" width="2000" height="1500" alt="示例图片">
+          </div>
+        </div>
+      </div>
+    </div>
+          <div class="pt-12 space-y-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 客房体验 -->
+  <section id="rooms" class="py-20 bg-light">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">奢华客房 · 舒适体验</h2>
+        <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          每间客房均以荷花为设计灵感，融合现代奢华与东方美学，为您打造静谧舒适的休憩空间
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 客房1 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\cefe78bb1a7757d91ecf2e9238218e11.jpg" alt="亲子房" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute top-4 right-4 bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">
+              最受欢迎
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">亲子房</h3>
+              <div class="text-yellow-400 flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              面积45㎡，配备儿童游乐区，可供孩子自由玩耍，原木家具搭配暖色装饰，温馨惬意。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">亲子互动区</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">儿童睡眠隔断</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">免费WiFi</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">自然主题装饰</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-gray-500 line-through text-sm">¥1,280/晚</span>
+                <span class="text-primary font-bold text-xl ml-2">¥980/晚</span>
+              </div>
+              <a href="#booking" class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-full text-sm transition-colors duration-300">
+                立即预订
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 客房2 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\df7667260914f61f0eb58d5499c66468.jpg"alt="海边景观房" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">海边景观房</h3>
+              <div class="text-yellow-400 flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star-half-o"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              面积55㎡，高层海景视野，全景落地窗设计，现代奢华装修风格，配备独立起居室。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">全景落地窗</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">休闲躺椅</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">海景浴缸</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">行政礼遇</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-gray-500 line-through text-sm">¥1,580/晚</span>
+                <span class="text-primary font-bold text-xl ml-2">¥1,280/晚</span>
+              </div>
+              <a href="#booking" class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-full text-sm transition-colors duration-300">
+                立即预订
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 客房3 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\e9676f9f61b24232af4fa6f9430d0219.jpg" alt="悦养康养房" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute top-4 right-4 bg-secondary text-white text-sm font-medium px-3 py-1 rounded-full">
+              适老体验
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">悦养康养房</h3>
+              <div class="text-yellow-400 flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-4">
+              面积55㎡，适老化设施让行动更从容，定制康养床垫托住一夜好眠，连露台的景观露台上，都藏着草本洗护的清新气息。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">康养床垫</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">草本洗护</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">适老化设施</span>
+              <span class="bg-light text-primary text-xs px-3 py-1 rounded-full">景观露台</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-gray-500 line-through text-sm">¥1,580/晚</span>
+                <span class="text-primary font-bold text-xl ml-2">¥1,280/晚</span>
+              </div>
+              <a href="#booking" class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-full text-sm transition-colors duration-300">
+                立即预订
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="#contact" class="inline-flex items-center bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300">
+          查看全部房型 <i class="fa fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 餐饮体验 -->
+  <section id="dining" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">味蕾盛宴 · 餐饮体验</h2>
+        <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          特色餐厅，融合中西美食精髓，以荷花为创意灵感，为您呈现视觉与味觉的双重享受
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <!-- 菜品1 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\675aec163596f9c1aafa1ceb0fa75a5c.jpg" alt="闽南佛跳墙" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">闽南佛跳墙</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              选用本地鲍鱼、海参、鱼翅等名贵海鲜，配以特制高汤，口感浓郁醇厚，体现高端度假酒店的奢华感。
+            </p>
+          </div>
+        </div>
+
+       <!-- 菜品2 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\326c50dad8707ed7cdf2f2c66c096877.jpg" alt="清蒸海鲈鱼" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">清蒸海鲈鱼</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              选用厦门海域新鲜海鲈鱼，清蒸保留原味，搭配本地姜葱和蒸鱼豉油，突出海鲜的鲜嫩。
+            </p>
+          </div>
+        </div>
+
+        
+  <!-- 菜品3 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\c488ffbc58648a939a563a4e25bf0ea6.jpg" alt="沙茶牛肉" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">沙茶牛肉</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+               厦门特色沙茶酱搭配嫩滑牛肉，可作为热菜或火锅配菜，具有浓郁的地方风味。
+            </p>
+          </div>
+        </div>
+
+        <!-- 小吃-->
+        <div class="bg-light rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300">
+          <div class="relative overflow-hidden h-64">
+            <img src="C:\Users\HP\Desktop\新建文件夹\6d838f71277aa19d2df11ca2f51602d8.jpg" alt="薄饼创新" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-serif font-bold text-primary mb-2">薄饼创新</h3>
+            <p class="text-gray-600 mb-4">
+              在传统薄饼的基础上，加入更多的海鲜食材，还可以搭配新鲜蔬菜，酱料方面，除了传统的甜辣酱，还可以尝试加入一些日式芥末酱或泰式甜辣酱
+            </p>
+           </div>
+          </div>
+        </div>
+        
+        <!-- 小吃 -->
+        <div class="lg:col-span-3 bg-primary/5 rounded-xl overflow-hidden shadow-lg p-8 flex flex-col md:flex-row items-center">
+          <div class="md:w-1/3 mb-6 md:mb-0">
+            <h3 class="text-2xl font-serif font-bold text-primary mb-3">海鲜套餐</h3>
+            <p class="text-gray-600 mb-4">
+              每周六、日限量供应，升级版虾面和改良海蛎煎，提升视觉，口感丰富。
+            </p>
+            <a href="#contact" class="inline-block bg-primary hover:bg-dark text-white px-6 py-2 rounded-full text-sm transition-colors duration-300">
+              预约用餐
+            </a>
+          </div>
+          <div class="md:w-2/3 grid grid-cols-2 gap-4">
+            <img src="C:\Users\HP\Desktop\新建文件夹\7ad82f3f8dbcd108f9271d95d53b9d9e.jpg"alt="升级版虾面" class="w-full h-40 object-cover rounded-lg">
+            <img src="C:\Users\HP\Desktop\新建文件夹\0884a3a626fe5d81ff450d128924b691.jpg" alt="升级版虾面" class="w-full h-40 object-cover rounded-lg">
+            <img src="C:\Users\HP\Desktop\新建文件夹\458a209038d26e71a0b771ccca47a64e.jpg" alt="改良海蛎煎" class="w-full h-40 object-cover rounded-lg">
+            <img src="C:\Users\HP\Desktop\新建文件夹\719df93c75f0d78008f3192064e6aedf.jpg" alt="改良海蛎煎" class="w-full h-40 object-cover rounded-lg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 休闲设施 -->
+  <section id="amenities" class="py-20 bg-light">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">休闲设施 · 惬意时光</h2>
+        <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          丰富的休闲娱乐设施，让您在度假期间放松身心，享受惬意时光
+        </p>
+      </div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+
+  <!-- 设施1 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+           <img src="C:\Users\HP\Desktop\新建文件夹\6d8a512eb234485f4a836e80ef60deef.jpg" alt="荷花池网红打卡地" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">荷花池网红打卡地</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              池清荷艳，亭雅椅透，景美宜赏。
+            </p>
+          </div>
+        </div>
+
+        
+        <!-- 设施2 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+           <img src="C:\Users\HP\Desktop\新建文件夹\068e405cef887fa0c4cd383a7b8c85b2.jpg" alt="闽南文化体验中心" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">闽南文化体验中心</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              红砖古厝与玻璃交融，灯笼暖光，展闽南韵味。
+            </p>
+          </div>
+        </div>
+
+        
+       <!-- 设施3 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+           <img src="C:\Users\HP\Desktop\新建文件夹\4f024e847458f84cc5404dfb5518394e.jpg" alt="海洋主题俱乐部" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">海洋主题俱乐部</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              蓝调光影伴海底墙，优雅舒适沉浸式体验
+            </p>
+          </div>
+        </div>
+
+        
+       <!-- 设施4 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="relative overflow-hidden h-64">
+           <img src="C:\Users\HP\Desktop\新建文件夹\3d0d32486fb904b0edea37543b0cea70.jpg" alt="自然探索小径" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-xl font-serif font-bold text-primary">自然探索小径</h3>
+            </div>
+            <p class="text-gray-600 mb-4">
+              石径隐于林，光影斑驳，绿意悠然。
+            </p>
+          </div>
+        </div>
+      </div>
+        </div>
+
+      <!-- 客户评价 -->
+      <div class="mt-24">
+        <div class="text-center mb-12">
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">宾客好评</h2>
+          <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+          <p class="text-gray-600 max-w-3xl mx-auto">
+            听听我们的宾客怎么说
+          </p>
+        </div>
+        
+        <div class="reviews-grid">
+          </p>
+      </div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+</section>
+<!-- 评价1 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </div>
+            <p class="review-text">
+              酒店环境非常优美，荷花池令人印象深刻，房间干净舒适，服务周到贴心，早餐丰富美味，是一次难忘的度假体验。特别感谢前台工作人员的热情服务，让我们有宾至如归的感觉。
+            </p>
+            <div class="reviewer">
+              <img src="C:\Users\HP\Desktop\新建文件夹\d9fb0f0d188bf24077e0f6797885f60e.jpg" alt="客户头像" class="w-12 h-12  alt="张女士">
+              <div class="reviewer-info">
+                <h4>张女士</h4>
+                <p>来自上海</p>
+              </div>
+            </div>
+          </div>
+         </section>  
+<!-- 评价2 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+            </div>
+            <p class="review-text">
+              露天观景台的景色太美了，白天看海，晚上看星星，荷花SPA的体验也很棒，服务人员专业又热情。酒店的位置非常便利，步行几分钟就能到达海边，下次来厦门还会选择这里。
+            </p>
+            <div class="reviewer">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="李先生">
+              <div class="reviewer-info">
+                <h4>李先生</h4>
+                <p>来自北京</p>
+              </div>
+            </div>
+          </div>
+         </section> 
+<!-- 评价3 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+            </div>
+            <p class="review-text">
+              荷花主题的设计很有特色，餐厅的料理创意十足，味道也很棒。酒店位置优越，步行几分钟就能到海边，非常适合度假放松。唯一的小建议是希望早餐种类可以更丰富一些。
+            </p>
+            <div class="reviewer">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="王先生">
+              <div class="reviewer-info">
+                <h4>王先生</h4>
+                <p>来自广州</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 评价4 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+            </div>
+            <p class="review-text">
+              酒店环境整洁舒适，服务热情周到，性价比很高，餐厅的佛跳墙真的很好吃真的很正宗。
+            </p>
+            <div class="reviewer">
+              <img src="C:\Users\HP\Desktop\新建文件夹\95e406fe2d218b1a84fc9614b08f6221.jpg" alt="邱女士">
+              <div class="reviewer-info">
+                <h4>邱女士</h4>
+                <p>来自深圳</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 评价5 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+            </div>
+            <p class="review-text">
+              很喜欢就地拿到康养房，对老人照顾很周到，隔音效果也很好，适合度假和游玩。
+            </p>
+            <div class="reviewer">
+              <img src="C:\Users\HP\Desktop\新建文件夹\ac42e6aacad4b6cdf422cad34626111a.jpg" alt="严先生">
+              <div class="reviewer-info">
+                <h4>严先生</h4>
+                <p>来自河北</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 评价6 -->
+          <div class="review-card">
+            <div class="quote-icon">"</div>
+            <div class="stars">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+            </div>
+            <p class="review-text">
+              我是六月份去的，荷花开得正旺盛，打卡拍照的好地方，气候正好，服务到位，设施完善。
+            </p>
+            <div class="reviewer">
+              <img src="C:\Users\HP\Desktop\新建文件夹\b1ab76bf8134b9d016078621f047f1b.jpg" alt="方先生">
+              <div class="reviewer-info">
+                <h4>方女士</h4>
+                <p>来自杭州</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- 预订区域 -->
+  <section id="booking" class="py-20 bg-primary relative overflow-hidden">
+    <!-- 背景装饰 -->
+    <div class="absolute top-0 left-0 w-full h-full opacity-10">
+      <img src="https://picsum.photos/id/175/1920/1080" alt="荷花背景" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-white mb-4">立即预订 · 开启惬意之旅</h2>
+        <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+        <p class="text-accent/90 max-w-3xl mx-auto">
+          填写以下信息，预订您的专属度假体验，我们将尽快与您联系确认
+        </p>
+      </div>
+      
+      <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-5">
+          <!-- 预订表单 -->
+          <div class="lg:col-span-3 p-8 md:p-10">
+            <form id="bookingForm" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="name" class="block text-gray-700 mb-2 font-medium">姓名</label>
+                  <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300" placeholder="请输入您的姓名">
+                </div>
+                <div>
+                  <label for="phone" class="block text-gray-700 mb-2 font-medium">电话</label>
+                  <input type="tel" id="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300" placeholder="请输入您的手机号码">
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="checkin" class="block text-gray-700 mb-2 font-medium">入住日期</label>
+                  <input type="date" id="checkin" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300">
+                </div>
+                <div>
+                  <label for="checkout" class="block text-gray-700 mb-2 font-medium">退房日期</label>
+                  <input type="date" id="checkout" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300">
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="roomType" class="block text-gray-700 mb-2 font-medium">房型选择</label>
+                  <select id="roomType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300">
+                    <option value="">请选择房型</option>
+                    <option value="lotus">荷花景观房</option>
+                    <option value="sea">海景豪华房</option>
+                    <option value="villa">荷花别墅套房</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="guests" class="block text-gray-700 mb-2 font-medium">入住人数</label>
+                  <select id="guests" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300">
+                    <option value="">请选择人数</option>
+                    <option value="1">1人</option>
+                    <option value="2">2人</option>
+                    <option value="3">3人</option>
+                    <option value="4">4人</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label for="message" class="block text-gray-700 mb-2 font-medium">特殊要求</label>
+                <textarea id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-300" placeholder="如有特殊要求，请在此说明"></textarea>
+              </div>
+              
+              <button type="submit" class="w-full bg-primary hover:bg-dark text-white px-6 py-3 rounded-lg text-lg font-medium transition-colors duration-300 shadow-lg">
+                提交预订
+              </button>
+            </form>
+          </div>
+          
+          <!-- 促销信息 -->
+          <div class="lg:col-span-2 bg-primary p-8 md:p-10 text-white flex flex-col justify-between">
+            <div>
+              <h3 class="text-2xl font-serif font-bold mb-6">限时优惠</h3>
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="bg-white/20 p-2 rounded-full mr-4 mt-1">
+                    <i class="fa fa-tag text-white"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-lg mb-1">连住优惠</h4>
+                    <p class="text-white/80 text-sm">连住3晚及以上，享8.5折优惠</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-white/20 p-2 rounded-full mr-4 mt-1">
+                    <i class="fa fa-cutlery text-white"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-lg mb-1">餐饮礼遇</h4>
+                    <p class="text-white/80 text-sm">预订即送双人早餐及欢迎水果</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-white/20 p-2 rounded-full mr-4 mt-1">
+                    <i class="fa fa-spa text-white"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-lg mb-1">SPA体验</h4>
+                    <p class="text-white/80 text-sm">入住即享SPA 8折优惠券</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="bg-white/20 p-2 rounded-full mr-4 mt-1">
+                    <i class="fa fa-taxi text-white"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-lg mb-1">接送服务</h4>
+                    <p class="text-white/80 text-sm">机场/高铁站免费接送（提前预约）</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-white/20">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-white/90">会员专享</span>
+                <span class="text-accent font-bold">额外9.5折</span>
+              </div>
+              <a href="#" class="block text-center bg-white text-primary hover:bg-accent px-6 py-3 rounded-lg font-medium transition-colors duration-300">
+                立即注册会员
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系我们 -->
+  <section id="contact" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-serif font-bold text-primary mb-4">联系我们</h2>
+          <div class="w-20 h-1 bg-secondary mb-6"></div>
+          <p class="text-gray-600 mb-8">
+            无论您有任何疑问、建议或需求，我们的团队都将竭诚为您提供帮助。欢迎通过以下方式联系我们。
+          </p>
+          
+          <div class="space-y-6 mb-8">
+            <div class="flex items-start">
+              <div class="bg-primary/10 p-3 rounded-full mr-4">
+                <i class="fa fa-map-marker text-primary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-primary mb-1">酒店地址</h3>
+                <p class="text-gray-600">厦门市集美区与杏林区交界荷里悦酒店</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-primary/10 p-3 rounded-full mr-4">
+                <i class="fa fa-phone text-primary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-primary mb-1">联系电话</h3>
+                <p class="text-gray-600">+86 592-1234567</p>
+                <p class="text-gray-600">预订热线：+86 592-7654321</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-primary/10 p-3 rounded-full mr-4">
+                <i class="fa fa-envelope text-primary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-primary mb-1">电子邮箱</h3>
+                <p class="text-gray-600">info@Hollyhotel.com</p>
+                <p class="text-gray-600">reservation@Hollyhotel..com</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="bg-primary/10 p-3 rounded-full mr-4">
+                <i class="fa fa-clock-o text-primary text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-primary mb-1">营业时间</h3>
+                <p class="text-gray-600">24小时服务</p>
+                <p class="text-gray-600">入住时间：14:00后 | 退房时间：12:00前</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex space-x-4">
+            <a href="#" class="bg-primary hover:bg-dark text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <i class="fa fa-weixin"></i>
+            </a>
+            <a href="#" class="bg-primary hover:bg-dark text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <i class="fa fa-weibo"></i>
+            </a>
+            <a href="#" class="bg-primary hover:bg-dark text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <i class="fa fa-instagram"></i>
+            </a>
+            <a href="#" class="bg-primary hover:bg-dark text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bg-light rounded-xl overflow-hidden shadow-lg h-[500px]">
+          <!-- 地图占位 -->
+          <div class="w-full h-full relative">
+            <img src="https://picsum.photos/id/101/1200/800" alt="酒店位置地图" class="w-full h-full object-cover">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="bg-primary text-white px-6 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <i class="fa fa-map-marker mr-2"></i> 荷里悦酒店位置
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div>
+          <div class="flex items-center space-x-2 mb-6">
+            <span class="text-secondary text-3xl"><i class="fa fa-leaf"></i></span>
+            <span class="text-2xl font-serif font-bold">荷里悦</span>
+          </div>
+          <p class="text-gray-400 mb-6">
+            荷风拂面，悦享厦门。荷里悦酒店，为您提供静谧奢华的度假体验。
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-weixin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-weibo text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-instagram text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fa fa-facebook text-xl"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-bold mb-6">快速链接</h3>
+          <ul class="space-y-3">
+            <li><a href="#about" class="text-gray-400 hover:text-white transition-colors duration-300">关于我们</a></li>
+            <li><a href="#rooms" class="text-gray-400 hover:text-white transition-colors duration-300">客房体验</a></li>
+            <li><a href="#dining" class="text-gray-400 hover:text-white transition-colors duration-300">餐饮美食</a></li>
+            <li><a href="#amenities" class="text-gray-400 hover:text-white transition-colors duration-300">休闲设施</a></li>
+            <li><a href="#booking" class="text-gray-400 hover:text-white transition-colors duration-300">在线预订</a></li>
+            <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors duration-300">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-bold mb-6">酒店服务</h3>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">24小时客房服务</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">机场接送服务</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">洗衣服务</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">会议设施</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">婚礼服务</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">旅游咨询</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-bold mb-6">订阅通讯</h3>
+          <p class="text-gray-400 mb-4">
+            订阅我们的电子通讯，及时获取最新优惠和活动信息
+          </p>
+          <form class="flex mb-4">
+            <input type="email" placeholder="您的电子邮箱" class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-dark">
+            <button type="submit" class="bg-primary hover:bg-secondary px-4 py-2 rounded-r-lg transition-colors duration-300">
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </form>
+          <p class="text-gray-500 text-sm">
+            我们尊重您的隐私，不会向第三方分享您的信息
+          </p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">
+          &copy; 2024 荷里悦酒店. 保留所有权利.
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors duration-300">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors duration-300">使用条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors duration-300">网站地图</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部按钮 -->
+  <button id="backToTop" class="fixed bottom-8 right-8 bg-primary hover:bg-dark text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-30">
+    <i class="fa fa-angle-up text-xl"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 页面加载动画
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loader').classList.add('opacity-0');
+        setTimeout(function() {
+          document.getElementById('loader').style.display = 'none';
+        }, 300);
+      }, 800);
+    });
+    
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 100) {
+        navbar.classList.add('bg-primary/95', 'bg-blur', 'shadow-lg');
+        navbar.classList.remove('bg-transparent');
+      } else {
+        navbar.classList.remove('bg-primary/95', 'bg-blur', 'shadow-lg');
+        navbar.classList.add('bg-transparent');
+      }
+    });
+    
+    // 移动端菜单
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    
+    menuBtn.addEventListener('click', function() {
+      if (!menuOpen) {
+        mobileMenu.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+        mobileMenu.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        menuBtn.innerHTML = '<i class="fa fa-times"></i>';
+        menuOpen = true;
+      } else {
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+        mobileMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+        menuOpen = false;
+      }
+    });
+    
+    // 关闭移动端菜单（点击链接后）
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+        mobileMenu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        menuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+        menuOpen = false;
+      });
+    });
+    
+    // 返回顶部按钮
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 500) {
+        backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
+        backToTopBtn.classList.add('translate-y-0', 'opacity-100');
+      } else {
+        backToTopBtn.classList.add('translate-y-20', 'opacity-0');
+        backToTopBtn.classList.remove('translate-y-0', 'opacity-100');
+      }
+    });
+    
+    backToTopBtn.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 预订表单提交
+    const bookingForm = document.getElementById('bookingForm');
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 简单表单验证
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const roomType = document.getElementById('roomType').value;
+      const guests = document.getElementById('guests').value;
+      
+      if (!name || !phone || !checkin || !checkout || !roomType || !guests) {
+        alert('请填写所有必填字段');
+        return;
+      }
+      
+      // 模拟表单提交
+      alert('预订信息提交成功！我们将尽快与您联系确认。');
+      bookingForm.reset();
+    });
+    
+    // 设置最小入住日期为今天
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkin').min = today;
+    
+    // 退房日期不能早于入住日期
+    document.getElementById('checkin').addEventListener('change', function() {
+      const checkinDate = this.value;
+      document.getElementById('checkout').min = checkinDate;
+      if (document.getElementById('checkout').value < checkinDate) {
+        document.getElementById('checkout').value = checkinDate;
+      }
+    });
+  </script>
+</body>
+</html>
